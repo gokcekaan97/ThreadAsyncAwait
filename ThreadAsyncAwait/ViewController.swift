@@ -15,7 +15,13 @@ class ViewController: UIViewController {
     super.viewDidLoad()
     myTableView.delegate = self
     myTableView.dataSource = self
-    DownloadArray(){result in
+    Task{
+      await CryptoList()
+    }
+  }
+  
+  func CryptoList()async{
+    await DownloadArray(){result in
       switch result{
         case .failure(let error):
           print(error)
@@ -24,7 +30,7 @@ class ViewController: UIViewController {
       }
     }
   }
-  func DownloadArray(completion: @escaping (Result<[Currency]?,DownloaderError>) -> Void){
+  func DownloadArray(completion: @escaping (Result<[Currency]?,DownloaderError>) -> Void) async {
     guard let url = URL (string: "https://raw.githubusercontent.com/atilsamancioglu/K21-JSONDataSet/master/crypto.json") else {
       return completion(.failure(.badUrl))
     }
